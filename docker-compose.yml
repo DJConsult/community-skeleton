@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  uvdesk:
+    image: php:7.4-apache
+    container_name: uvdesk
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    volumes:
+      - ./uvdesk:/var/www/html
+    environment:
+      - APP_ENV=prod
+      - DATABASE_URL=mysql://uvdesk:uvdeskpassword@db:3306/uvdeskdb
+    command: bash -c "docker-php-ext-install mysqli pdo pdo_mysql && apache2-foreground"
+
+  db:
+    image: mariadb:10.5
+    container_name: uvdesk_db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD= Omnivir12345#
+      - MYSQL_DATABASE=uvdeskdb
+      - MYSQL_USER=uvdesk
+      - MYSQL_PASSWORD= Omnivir12345#
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
